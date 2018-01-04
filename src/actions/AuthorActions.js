@@ -1,6 +1,7 @@
 import AuthorApi from '../api/mockAuthorApi';
 import CourseApi from '../api/mockCourseApi';
 import * as types from './ActionTypes';
+import {beginAjaxCall} from './AjaxStatusActions';
 
 export function loadAuthorsSuccess(authors) {
   return {type: types.LOAD_AUTHORS_SUCCESS, authors};
@@ -16,6 +17,7 @@ export function updateCourseSuccess(course) {
 
 export function loadAuthors() {
   return function(dispatch) {
+    dispatch(beginAjaxCall());
     return AuthorApi.getAllAuthors().then(authors => {
       dispatch(loadAuthorsSuccess(authors));
     }).catch(error => {
@@ -26,6 +28,7 @@ export function loadAuthors() {
 
 export function saveCourse(course) {
   return function (dispatch, getState) {
+    dispatch(beginAjaxCall());
     return CourseApi.saveCourse(course).then(savedCourse => {
       course.id ? dispatch(updateCourseSuccess(savedCourse)) :
         dispatch(createCourseSuccess(savedCourse));
